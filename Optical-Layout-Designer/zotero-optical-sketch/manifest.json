@@ -1,0 +1,7 @@
+{
+  "manifest_version": 2,
+  "name": "光路手绘 · Optical Sketch",
+  "description": "在 Zotero PDF 阅读器旁手动绘制光路，按附件保存并导出原理图。",
+  "version": "0.1.0",
+  "applications": {"zotero": {"id": "optical-sketch@local.tools", "strict_min_version": "10.0", "strict_max_version": "10.*"}}
+}
