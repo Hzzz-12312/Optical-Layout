@@ -7,9 +7,11 @@ Optical Layout Designer 能读取的原理图 JSON。
 
 1. Zotero 7.0 及以上（已在 Zotero 10.0.8 上验证打包格式）。
 2. 打开 **工具 → 插件**（Tools → Plugins）。
-3. 点右上角的齿轮 → **Install Plugin From File…**，选择 `Optical-Sketch-0.1.1.xpi`
-   （本地在仓库根目录，GitHub 上在 `Optical-Layout-Designer/Optical-Sketch-0.1.1.xpi`）。
-4. 选中一个 PDF 附件条目，右侧条目面板会出现「光路手绘」分区。
+3. 点右上角的齿轮 → **Install Plugin From File…**，选择 `Optical-Sketch-0.1.2.xpi`
+   （本地在仓库根目录，GitHub 上在 `Optical-Layout-Designer/Optical-Sketch-0.1.2.xpi`）。
+4. 选中带 PDF 附件的条目（或直接选中 PDF 附件 / 打开 PDF 阅读器），右侧条目面板会出现
+   「光路手绘」分区：条目面板最右侧图标栏里那个绿色斜线图标就是它，点一下即可展开。
+   选中没有 PDF 附件的条目时分区会显示一行提示，而不是整块消失。
 
 也可用于调试：**工具 → 开发者 → Run JavaScript**，或把 `.xpi` 直接放进
 `<profile>/extensions/optical-sketch@local.tools.xpi` 后重启 Zotero。

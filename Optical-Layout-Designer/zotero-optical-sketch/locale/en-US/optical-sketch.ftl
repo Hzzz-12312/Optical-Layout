@@ -1,5 +1,4 @@
-optical-sketch-heading = Optical Sketch
+optical-sketch-heading =
     .label = Optical Sketch
-optical-sketch-navigation = Optical Sketch
+optical-sketch-navigation =
     .tooltiptext = Optical Sketch
-    .aria-label = Optical Sketch

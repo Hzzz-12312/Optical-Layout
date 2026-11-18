@@ -4,14 +4,46 @@ var paneID, styleText;
 const states = new Map();
 const pending = new Set();
 const HTML = 'http://www.w3.org/1999/xhtml';
-function attachment({body, item}) {
+function tabItem(body) {
   const details = body.closest('item-details');
-  if (!details?.tabID) return null;
-  const reader = Zotero.Reader.getByTabID(details.tabID);
-  const nativeTab = body.ownerDocument.defaultView.Zotero_Tabs?._getTab(details.tabID)?.tab;
-  const id = reader?.itemID || nativeTab?.data?.itemID;
-  const pdf = id ? Zotero.Items.get(id) : item;
-  return pdf?.isPDFAttachment?.() ? pdf : null;
+  const tabID = details?.tabID;
+  if (!tabID) return null;
+  const reader = Zotero.Reader.getByTabID(tabID);
+  if (reader?.itemID) return Zotero.Items.get(reader.itemID);
+  const nativeTab = body.ownerDocument.defaultView.Zotero_Tabs?._getTab?.(tabID)?.tab;
+  return nativeTab?.data?.itemID ? Zotero.Items.get(nativeTab.data.itemID) : null;
+}
+function firstPDF(item) {
+  for (const id of item?.getAttachments?.() || []) {
+    const attachment = Zotero.Items.get(id);
+    if (attachment?.isPDFAttachment?.()) return attachment;
+  }
+  return null;
+}
+function pdfTarget(item) {
+  if (!item) return null;
+  if (item.isPDFAttachment?.()) return item;
+  if (item.isAnnotation?.()) {
+    const parent = item.parentItem;
+    return parent?.isPDFAttachment?.() ? parent : null;
+  }
+  let parent = item;
+  if (item.isAttachment?.()) parent = item.parentItem;
+  return parent?.isRegularItem?.() ? firstPDF(parent) : null;
+}
+// The pane follows the PDF the user is looking at: the attachment open in the
+// reader, otherwise the selected attachment, otherwise the PDF of the selected
+// item. Selecting the parent journal article therefore works too.
+function attachment({body, item}) {
+  for (const candidate of [tabItem(body), item]) {
+    const pdf = pdfTarget(candidate);
+    if (pdf) return pdf;
+  }
+  return null;
+}
+function supports(args) {
+  const item = args.item;
+  return !!attachment(args) || !!item?.isRegularItem?.() || !!item?.isAttachment?.();
 }
 function detach(body) {
   const state = states.get(body);
@@ -22,7 +54,16 @@ function detach(body) {
 async function render(args) {
   const {body, doc} = args;
   const pdf = attachment(args);
-  if (!pdf || states.get(body)?.id === pdf.id) return;
+  if (!pdf) {
+    if (body.querySelector('.optical-hint')) return;
+    detach(body);
+    const hint = doc.createElementNS(HTML, 'p');
+    hint.className = 'optical-hint';
+    hint.textContent = '该条目暂无 PDF 附件。给条目添加 PDF 附件后，草图会按附件单独保存。';
+    body.append(hint);
+    return;
+  }
+  if (states.get(body)?.id === pdf.id) return;
   detach(body);
   const state = {id: pdf.id, revision: 0};
   states.set(body, state);
@@ -50,7 +91,7 @@ async function render(args) {
       pending.add(write);
       write.finally(() => pending.delete(write));
     });
-    status.textContent = '修改后自动保存在本机';
+    status.textContent = '修改后自动保存在本机 · ' + (pdf.attachmentFilename || 'PDF');
     exportButton.disabled = false;
     exportButton.onclick = async () => {
       try { await OpticalStore.exportFile(pdf,state.editor.getData(),doc.defaultView); } catch(e) { report(e); }
@@ -66,7 +107,7 @@ async function startup({id, rootURI}) {
   const icon = rootURI+'icon.svg';
   paneID = Zotero.ItemPaneManager.registerSection({paneID:'optical-sketch',pluginID:id,
     header:{l10nID:'optical-sketch-heading',icon}, sidenav:{l10nID:'optical-sketch-navigation',icon},
-    onItemChange(args) { args.setEnabled(!!attachment(args)); },
+    onItemChange(args) { args.setEnabled(supports(args)); },
     onRender(args) { render(args).catch(e => Zotero.logError(e)); },
     onDestroy({body}) { detach(body); }
   });
