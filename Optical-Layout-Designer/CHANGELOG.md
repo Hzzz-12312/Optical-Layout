@@ -2,6 +2,11 @@
 
 What changed in each update, newest first.
 
+## 2026-11-18
+
+### Fixed
+- **Zotero plugin:** installing the package failed on Zotero 10 because the manifest lacked `applications.zotero.update_url`, which Zotero 10 requires. The manifest now declares it (plus author, homepage and icon), the compatibility range is 7.0-10.*, and `zotero-optical-sketch/build.py` rebuilds `Optical-Sketch-0.1.1.xpi`.
+
 ## 2026-11-06
 
 ### Fixed
