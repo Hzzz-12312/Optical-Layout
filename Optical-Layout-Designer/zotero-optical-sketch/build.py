@@ -5,8 +5,9 @@ Usage:
     python build.py                # writes ../Optical-Sketch-<version>.xpi
     python build.py path/to/file.xpi
 
-Only the runtime files are packaged: manifest.json, bootstrap.js, storage.js,
-editor.js, editor.css, icon.svg and locale/**/*.ftl. Development files
+Only the runtime files are packaged: manifest.json, bootstrap.js, catalog.js, source.js, storage.js,
+editor.js, editor.css, reference-capture.js, reference-panel.js, reference-panel.css,
+icon.svg and locale/**/*.ftl. Development files
 (build.py, update.json, README.md) stay out of the archive.
 
 Zotero 10 rejects a plugin whose manifest lacks any of

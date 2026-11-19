@@ -1,0 +1,55 @@
+.oc-reference {
+  box-sizing: border-box;
+  min-width: 0;
+  margin: 0 0 8px;
+  padding: 0 0 8px;
+  border-block-end: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+  font: inherit;
+  color: inherit;
+}
+.oc-reference-header, .oc-reference-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+}
+.oc-reference-title { font-size: 1em; }
+.oc-reference-page { font-size: .92em; }
+.oc-reference-actions { margin-inline-start: auto; }
+.oc-reference .oc-reference-button {
+  appearance: none;
+  font: inherit;
+  color: ButtonText;
+  background: ButtonFace;
+  border: 1px solid color-mix(in srgb, ButtonText 45%, transparent);
+  border-radius: 4px;
+  padding: 3px 7px;
+  margin: 0;
+  cursor: pointer;
+}
+.oc-reference .oc-reference-button:focus-visible,
+.oc-reference .oc-reference-button:hover { outline: 1px solid currentColor; }
+.oc-reference .oc-reference-button:disabled { opacity: .55; cursor: default; }
+.oc-reference [hidden] { display: none !important; }
+.oc-reference-status { margin: 4px 0 0; line-height: 1.4; }
+.oc-reference-viewport {
+  max-block-size: clamp(140px, 29vh, 340px);
+  margin-block-start: 5px;
+  border: 1px solid #97a6ac;
+  border-radius: 4px;
+  background: white;
+  overflow: auto;
+}
+.oc-reference .oc-reference-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: clamp(138px, 28vh, 330px);
+  object-fit: contain;
+}
+.oc-reference .is-zoomed .oc-reference-image {
+  width: 200%;
+  max-width: none;
+  max-height: none;
+}
+

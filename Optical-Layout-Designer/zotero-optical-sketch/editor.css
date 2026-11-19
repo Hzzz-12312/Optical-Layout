@@ -10,16 +10,18 @@
 }
 .optical-canvas select option { color: CanvasText; background-color: Canvas; }
 .optical-canvas button { cursor: pointer; }
-.optical-canvas button[aria-pressed="true"] { background-color: #096771; color: white; border-color: #096771; }
+.optical-canvas .oc-tools button[aria-pressed="true"] { appearance: none !important; background: #096771 !important; color: #fff !important; border-color: #096771 !important; font-weight: 600; }
 .optical-canvas button:disabled { opacity: .44; cursor: default; }
 .optical-canvas .oc-status { line-height: 1.45; font-size: .94em; min-height: 1.45em; }
 .optical-canvas .oc-board {
   display: block; width: 100%; height: clamp(235px, 43vh, 700px); box-sizing: border-box;
   touch-action: none; user-select: none; border-radius: 5px; border: 1px solid #99aeb6;
-  background-color: #f9fbfc; background-image: radial-gradient(#dbe2e6 0.7px, transparent 0.8px);
-  background-size: 14px 14px;
+  background-color: #f9fbfc;
 }
 .optical-canvas .oc-board:focus-visible { outline: 2px solid #17858f; outline-offset: -2px; }
+.optical-canvas .oc-grid { gap: 4px 10px; }
+.optical-canvas .oc-check { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+.optical-canvas .oc-check input { width: auto; padding: 0; accent-color: #096771; }
 .optical-canvas .oc-view { justify-content: flex-end; }
 .optical-canvas .oc-inspector { display: flex; flex-wrap: wrap; gap: 5px 8px; align-items: end; }
 .optical-canvas .oc-field { display: grid; gap: 2px; flex: 1 1 95px; min-width: 0; }

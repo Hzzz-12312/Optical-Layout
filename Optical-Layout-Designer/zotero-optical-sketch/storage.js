@@ -3,7 +3,7 @@
 
   const ongoing = new Map();
   const kinds = new Set(["laser", "mirror", "lens", "hwp", "qwp", "pbs", "bs", "aom",
-    "shutter", "fiber", "iris", "photodiode", "dump"]);
+    "shutter", "fiber", "iris", "photodiode", "dump", ...Object.keys(globalThis.OpticalCatalog)]);
   const elementFields = ["id", "kind", "x", "y", "angle", "label", "notes", "part",
     "part_number", "auto_angle"];
   const linkFields = ["id", "source", "target", "color", "wavelength_nm", "label"];
@@ -94,5 +94,45 @@
     return true;
   }
 
-  window.OpticalStore = { load, save, exportFile };
+  function referencePath(item) {
+    return draftPath(item).replace(/\.json$/, ".reference.json");
+  }
+
+  function checkReference(ref) {
+    if (typeof ref?.dataURL !== "string" || !ref.dataURL.startsWith("data:image/png;base64,")
+        || !Number.isSafeInteger(ref.pageIndex) || ref.pageIndex < 0) {
+      throw new Error("参考图数据无效。");
+    }
+  }
+
+  async function loadReference(item) {
+    const path = referencePath(item);
+    await ongoing.get(path);
+    if (!await IOUtils.exists(path)) return null;
+    const ref = JSON.parse(await IOUtils.readUTF8(path));
+    checkReference(ref);
+    return ref;
+  }
+
+  async function saveReference(item, ref) {
+    const path = referencePath(item);
+    if (ref !== null) checkReference(ref);
+    const previous = ongoing.get(path) || Promise.resolve();
+    const write = previous.catch(() => {}).then(async () => {
+      if (ref === null) {
+        await IOUtils.remove(path, { ignoreAbsent: true });
+        return;
+      }
+      await IOUtils.makeDirectory(PathUtils.parent(path), { ignoreExisting: true });
+      await IOUtils.writeUTF8(path, JSON.stringify(ref), {
+        tmpPath: path + "." + Services.uuid.generateUUID().toString() + ".tmp"
+      });
+    });
+    ongoing.set(path, write);
+    try { await write; }
+    finally { if (ongoing.get(path) === write) ongoing.delete(path); }
+  }
+
+
+  window.OpticalStore = { load, save, exportFile, loadReference, saveReference };
 })();
