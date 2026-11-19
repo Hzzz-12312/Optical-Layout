@@ -209,8 +209,9 @@ async function render(args) {
   } catch(e) { report(e); }
 }
 function onMainWindowLoad({window: win}) { win.MozXULElement.insertFTLIfNeeded('optical-sketch.ftl'); }
-async function startup({id, rootURI}) {
+async function startup({id, rootURI, version}) {
   await Zotero.initializationPromise;
+  window.OpticalPluginVersion = version;
   for (const path of ['catalog.js','storage.js','source.js','editor.js','reference-capture.js','reference-panel.js']) Services.scriptloader.loadSubScript(rootURI + path, window, 'UTF-8');
   styleText = (await Promise.all(['editor.css','reference-panel.css'].map(name => Zotero.File.getResourceAsync(rootURI + name)))).join('\n');
   for (const win of Zotero.getMainWindows()) onMainWindowLoad({window:win});

@@ -70,10 +70,57 @@
       .map(name => [name, record[name]]));
   }
 
+  // Stable identifiers so a knowledge graph can join the drawing to its paper.
+  function provenance(item) {
+    const parent = item.parentItem || item;
+    let itemURI = "";
+    try {
+      itemURI = Zotero.URI.getItemURI ? Zotero.URI.getItemURI(parent) : Zotero.URI.getObjectURI(parent);
+    }
+    catch (e) { /* the key and DOI below remain usable */ }
+    const field = name => { try { return parent.getField(name) || ""; } catch (e) { return ""; } };
+    let creators = [];
+    try {
+      creators = (parent.getCreators() || []).map(c => ({
+        creatorType: c.creatorType || "", firstName: c.firstName || "",
+        lastName: c.lastName || "", name: c.name || ""
+      }));
+    }
+    catch (e) { /* keep the rest of the provenance */ }
+    let tags = [];
+    try { tags = (parent.getTags() || []).map(t => t.tag); } catch (e) { /* optional */ }
+    const date = field("date");
+    const year = (date.match(/\b(1\d{3}|20\d{2})\b/) || [])[1] || "";
+    let itemType = "";
+    try { itemType = Zotero.ItemTypes.getName(parent.itemTypeID); } catch (e) { /* optional */ }
+    return {
+      zotero: {
+        libraryID: parent.libraryID,
+        attachmentKey: item.key,
+        attachmentFilename: item.attachmentFilename || "",
+        itemKey: parent.key,
+        itemURI,
+        itemType,
+        title: field("title"),
+        DOI: field("DOI"),
+        year,
+        date,
+        publicationTitle: field("publicationTitle") || field("bookTitle")
+          || field("proceedingsTitle") || "",
+        creators,
+        tags
+      },
+      pluginVersion: globalThis.OpticalPluginVersion || "",
+      exportedAt: new Date().toISOString()
+    };
+  }
+
   async function exportFile(item, schematic, win) {
     checkStructure(schematic);
     const layout = {
-      format: "optolayout", version: 1, table: {},
+      format: "optolayout", version: 1,
+      provenance: provenance(item),
+      table: {},
       components: [], beams: [], measurement_points: [],
       schematic: {
         elements: schematic.elements.map(el => selectFields(el, elementFields)),

@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "光路手绘 · Optical Sketch",
   "description": "在 Zotero 条目面板中手动绘制光路，按 PDF 附件保存在本机，并可导出 Optical Layout Designer 原理图。",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "Hzzz-12312",
   "homepage_url": "https://github.com/Hzzz-12312/Optical-Layout",
   "icons": {

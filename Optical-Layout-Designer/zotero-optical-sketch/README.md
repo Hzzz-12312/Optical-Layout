@@ -84,3 +84,40 @@ Zotero 10 会拒绝缺少以下字段的插件，界面通常只提示“插件�
 | `locale/{en-US,zh-CN}/optical-sketch.ftl` | 面板标题与提示文本 |
 | `build.py` | 打包脚本（不进入 XPI） |
 | `update.json` | `update_url` 指向的更新清单（不进入 XPI） |
+
+## 导出文件与文献关联（provenance）
+
+「导出 JSON」会在文件顶层写入 `provenance`，Designer 读取时会忽略这个字段，不影响打开：
+
+```json
+"provenance": {
+  "zotero": {
+    "libraryID": 1,
+    "attachmentKey": "ABCD1234",
+    "attachmentFilename": "Zhou 等 - 2024 - ...pdf",
+    "itemKey": "WXYZ5678",
+    "itemURI": "http://zotero.org/users/19374817/items/WXYZ5678",
+    "itemType": "journalArticle",
+    "title": "光纤拉曼探头的研究进展及生物医学应用",
+    "DOI": "10.1117/1.OE.63.2.024103",
+    "year": "2024",
+    "date": "2024-11",
+    "publicationTitle": "Laser & Optoelectronics Progress",
+    "creators": [{"creatorType": "author", "firstName": "Suwei", "lastName": "Zhou", "name": ""}],
+    "tags": ["Raman", "fiber probe"]
+  },
+  "pluginVersion": "0.3.1",
+  "exportedAt": "2026-11-19T02:20:00.000Z"
+}
+```
+
+知识图谱可按下面两条边建模：
+
+```
+paper(itemURI 或 DOI) --has_figure--> figure(attachmentKey / exportedAt)
+figure --contains--> schematic.elements[] --beam--> schematic.links[]
+```
+
+优先级建议：`DOI` → `itemURI` → `itemKey`（key 在同一 Zotero 库内稳定，跨库/重导入会变）。
+`pluginVersion` 用来区分旧版本导出的图（0.3.0 及更早没有 `provenance`）。
+

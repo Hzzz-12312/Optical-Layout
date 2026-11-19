@@ -3,8 +3,8 @@
     "optical-sketch@local.tools": {
       "updates": [
         {
-          "version": "0.3.0",
-          "update_link": "https://github.com/Hzzz-12312/Optical-Layout/raw/main/Optical-Layout-Designer/Optical-Sketch-0.3.0.xpi"
+          "version": "0.3.1",
+          "update_link": "https://github.com/Hzzz-12312/Optical-Layout/raw/main/Optical-Layout-Designer/Optical-Sketch-0.3.1.xpi"
         }
       ]
     }

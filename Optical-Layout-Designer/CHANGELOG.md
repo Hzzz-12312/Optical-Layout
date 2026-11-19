@@ -2,6 +2,12 @@
 
 What changed in each update, newest first.
 
+## 2026-11-19
+
+### Added
+- **Zotero plugin:** the exported layout JSON now carries a `provenance` block — Zotero libraryID, attachment key and filename, parent item key/URI, item type, title, DOI, year, publication, creators, tags, plugin version and export time — so a knowledge graph can join each drawing to its paper. Designer ignores the block; build it as `Optical-Sketch-0.3.1.xpi`.
+- **Designer:** schematic marker symbols for literature figures (dichroic, grating, prism, objective, polarizer, filters, EOM, isolator, sample, camera, spectrometer).
+
 ## 2026-11-18
 
 ### Fixed
