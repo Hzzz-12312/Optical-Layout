@@ -248,6 +248,27 @@ SCH_KINDS: dict[str, tuple[str, str, list[str]]] = {
 }
 
 
+# Symbols for recording literature schematics; there are no measured mount footprints.
+SCHEMATIC_MARKERS = {
+    "dichroic": ("Dichroic mirror", "DM"),
+    "grating": ("Diffraction grating", "G"),
+    "prism": ("Prism", "PR"),
+    "objective": ("Microscope objective", "OBJ"),
+    "polarizer": ("Linear polarizer", "POL"),
+    "longpass": ("Long-pass filter", "LP"),
+    "shortpass": ("Short-pass filter", "SP"),
+    "bandpass": ("Band-pass filter", "BP"),
+    "notch": ("Notch filter", "NF"),
+    "nd_filter": ("Neutral density filter", "ND"),
+    "eom": ("Electro-optic modulator", "EOM"),
+    "isolator": ("Optical isolator", "ISO"),
+    "sample": ("Sample cell", "SC"),
+    "camera": ("Camera / CCD", "CAM"),
+    "spectrometer": ("Spectrometer", "SPEC"),
+}
+SCH_KINDS.update({kind: (name, prefix, [kind]) for kind, (name, prefix) in SCHEMATIC_MARKERS.items()})
+
+
 def kind_of_type(layout_type: str) -> str | None:
     for kind, (_n, _p, types) in SCH_KINDS.items():
         if layout_type in types:

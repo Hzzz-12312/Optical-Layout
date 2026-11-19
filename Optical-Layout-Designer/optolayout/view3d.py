@@ -20,7 +20,7 @@ from pathlib import Path
 import numpy as np
 import pyvista as pv
 
-from .model import Layout
+from .model import SCHEMATIC_MARKERS, Layout
 from .mounts3d import (LIGHTFLOW_BODY, LIGHTFLOW_ELEMENTS, BLOCK_COLOR, BOARD_BEAM_HEIGHT, DEFAULT_BEAM_HEIGHT, DRILLED_STYLES, MODELS, OLEGO_PILLARS,
                        PLATE_T, PYOPTICL_POCKET_PAD, TABLE_SCREW, footprint, mount_block, mount_boxes, mount_roll, optic_height, pillar_info,
                        pillar_xy, sunk_depth, table_screw_holes)
@@ -128,6 +128,8 @@ def _cube(h, clamp=False):
 
 
 def simple_model(typ: str, beam_height: float):
+    if typ in SCHEMATIC_MARKERS:
+        return []  # The beam can pass this point, but no physical model is specified.
     if typ in ("mirror_rd_1in", "mirror_rd_half_in"):
         return _rd_mirror(1.0 if typ.endswith("1in") else 0.62)
     if typ in ("mirror_1in", "mirror_d"):

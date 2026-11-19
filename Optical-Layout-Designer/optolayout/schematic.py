@@ -23,7 +23,7 @@ from PySide6.QtWidgets import (QCheckBox, QComboBox, QDialog, QDialogButtonBox, 
 
 from . import labels
 from .labels import draw_halo_text
-from .model import SCH_KINDS, Component, Layout, SchElement, SchLink, new_id
+from .model import SCH_KINDS, SCHEMATIC_MARKERS, Component, Layout, SchElement, SchLink, new_id
 from .symbols import SYMBOLS
 
 GRID = 10.0
@@ -161,6 +161,11 @@ SCH_SYMBOLS = {
     "photodiode": _sym_pd,
     "dump": _sym_dump,
 }
+
+
+# A compact identifier in the desktop schematic; no vendor part is implied.
+for kind, (_name, prefix) in SCHEMATIC_MARKERS.items():
+    SCH_SYMBOLS[kind] = lambda painter, text=prefix: _box(painter, 28, 17, text)
 
 
 def _sym_entry(p):

@@ -19,6 +19,8 @@ from PySide6.QtCore import QPointF, QRectF, Qt
 from PySide6.QtGui import (QBrush, QColor, QFont, QPainter, QPainterPath,
                            QPen, QPicture)
 
+from .model import SCHEMATIC_MARKERS
+
 # palette sampled from the reference drawing
 RD_RED = "#ed1c24"
 RD_YELLOW = "#f7d117"
@@ -344,6 +346,18 @@ register("fiber_cage", "Fiber coupler, cage (asphere + FC/APC)", _fiber_cage, "2
 register("iris", "Iris", _iris, "IDA12", "Other")
 register("dump", "Beam dump", _dump, "LB1", "Other")
 register("photodiode", "Photodiode", _photodiode, "PDA36A2", "Other")
+
+
+def _schematic_marker(p: QPainter) -> None:
+    # A location marker, never a mount outline or a source of mechanical dimensions.
+    p.setBrush(Qt.NoBrush)
+    p.setPen(QPen(QColor("#4f707e"), 0.7, Qt.DashLine))
+    p.drawEllipse(QPointF(0, 0), 4, 4)
+    p.drawPoint(QPointF(0, 0))
+
+
+for kind, (name, _prefix) in SCHEMATIC_MARKERS.items():
+    register(kind, f"{name} (schematic marker)", _schematic_marker, group="Schematic markers", physical=False)
 
 
 def make_icon(key: str, size: int = 40):
